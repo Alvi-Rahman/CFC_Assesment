@@ -1,26 +1,14 @@
 from utilities.beautiful_soup_scrapper import BeautifulSoupContentScrapper
-from utilities.page_info import GetPageInfo
-from utilities.url_scrapper import FetchUrl
-import csv
 
 
-class WebScrapper:
-    def __init__(self):
-        pass
-
-    def scrape(self):
-
-        get_page = GetPageInfo()
-        content = get_page.get_content()
-
+class CFCWebScrapper:
+    def scrape_cfc_index_page(self):
         bs_scrapper = BeautifulSoupContentScrapper()
-        soup = bs_scrapper.fetch(content)
-
-        url_scrapper = FetchUrl()
-        url_list = url_scrapper.fetch_url_list(content.decode("utf-8"))
+        external_resources = bs_scrapper.scrape_index_page()
+        return external_resources
 
 
 if __name__ == "__main__":
-    scraper_instance = WebScrapper()
-    scraper_instance.scrape()
+    scraper_instance = CFCWebScrapper()
+    print(scraper_instance.scrape_cfc_index_page())
 

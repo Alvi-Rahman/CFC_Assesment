@@ -3,8 +3,8 @@ import requests
 
 class GetPageInfo:
 
-    def __init__(self):
-        self.__page_url = "https://cfcunderwriting.com/"
+    def __init__(self, url):
+        self.__page_url = url
 
     def get_url(self):
         return self.__page_url
@@ -15,4 +15,4 @@ class GetPageInfo:
 
     def get_content(self):
         response = self.send_get_request()
-        return response.content
+        return response.text
