@@ -10,7 +10,7 @@ Methods:
     __scrape_resources():
         Scrapes external resources from a webpage and returns a dictionary of the scraped resources.
     __write_resources():
-        Writes the scraped external resources to a JSON file.
+        Writes the scraped external resources to a JSON file and returns a message indicating the success of the write operation.
     main():
         Entry point of the controller that orchestrates the scraping and writing process.
 
@@ -40,22 +40,30 @@ class ResourceScrapeController(BaseController):
         Returns:
             dict: Dictionary containing the scraped external resources.
         """
-        external_resources = self.base_scrapper.scrape_index_page()
-        return external_resources
+        try:
+            flag, external_resources = self.base_scrapper.scrape_index_page()
+            return flag, external_resources
+        except Exception as e:
+            return False, f"Error Writing file to {self.file_name} due to {e.args}"
 
     def __write_resources(self):
         """
-        Writes the scraped external resources to a JSON file.
+        Writes the scraped external resources to a JSON file and returns a message indicating the success of the write operation.
 
         Returns:
-            str: Message indicating the success of the write operation.
+            str: Message indicating the success of the write operation or an error message if writing fails.
         """
-        external_resources = self.__scrape_resources()
-        self.file_writer_obj.write_to_json_file(
-            external_resources,
-            self.file_name
-        )
-        return f"External resources were written to {self.file_name}"
+        try:
+            flag, external_resources = self.__scrape_resources()
+            if not flag:
+                return f"Error Writing file to {self.file_name} due to {external_resources}"
+            self.file_writer_obj.write_to_json_file(
+                external_resources,
+                self.file_name
+            )
+            return f"External resources were written to {self.file_name}"
+        except Exception as e:
+            return f"Error Writing file to {self.file_name} due to {e.args}"
 
     def main(self):
         """

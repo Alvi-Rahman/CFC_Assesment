@@ -77,15 +77,18 @@ class BeautifulSoupContentScrapper:
         Returns:
             dict: Dictionary of externally loaded resources.
         """
-        url = self.get_url()
-        get_page = GetPageInfo(url)
-        content = get_page.get_content()
-        # soup = self.fetch_bs_page(content)
+        try:
+            url = self.get_url()
+            get_page = GetPageInfo(url)
+            content = get_page.get_content()
+            # soup = self.fetch_bs_page(content)
 
-        bs_scrapper = FetchUrl()
-        external_resources = bs_scrapper.scrape_using_regex(content)
+            bs_scrapper = FetchUrl()
+            external_resources = bs_scrapper.scrape_using_regex(content)
 
-        return external_resources
+            return True, external_resources
+        except Exception as e:
+            return False, e.args[0]
 
     def count_words_frequency(self, url):
         """
@@ -124,7 +127,11 @@ class BeautifulSoupContentScrapper:
         visible text, and returns the frequency count as a dictionary.
 
         Returns:
-            dict: Dictionary containing word frequency count of the privacy policy page.
+            tuple[
+                bool: Determine whether this function raised any bug
+                dict: Dictionary containing word frequency count of the privacy policy page
+            ]
+
         """
         try:
             url = self.get_url()
@@ -133,9 +140,11 @@ class BeautifulSoupContentScrapper:
             soup = self.fetch_bs_page(content)
 
             bs_scrapper = FetchUrl()
-            privacy_policy_url = bs_scrapper.find_privacy_policy_url(soup, url)
+            flag, privacy_policy_url = bs_scrapper.find_privacy_policy_url(soup, url)
 
+            if not flag:
+                return False, "Error Finding Privacy Policy Url"
             word_count = self.count_words_frequency(privacy_policy_url)
-            return word_count
+            return True, word_count
         except Exception as e:
-            print(f"Error occurred while counting word frequency: {e}")
+            return False, e.args[0]

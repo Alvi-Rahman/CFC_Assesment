@@ -179,8 +179,8 @@ class FetchUrl:
                 href = link['href']
                 if 'privacy' in href.lower() and 'policy' in href.lower():
                     privacy_policy_url = urlparse(url)._replace(path=href).geturl()
-                    return privacy_policy_url
+                    return True, privacy_policy_url
 
-            print("Privacy Policy page not found.")
+            return False, None
         except Exception as e:
             print(f"Error occurred while finding the Privacy Policy URL: {e}")
