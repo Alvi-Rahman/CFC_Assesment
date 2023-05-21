@@ -8,11 +8,11 @@ Attributes:
 
 Methods:
     __get_privacy_policy_word_count():
-        Retrieves the word frequency count of the privacy policy.
+        Retrieves the word frequency count of the privacy policy and returns a dictionary of the count.
     __write_privacy_policy_word_count():
         Writes the privacy policy word frequency count to a JSON file.
     main():
-        Entry point of the controller.
+        Entry point of the controller that orchestrates the word counting and writing process.
 
 Inherits:
     BaseController
@@ -27,8 +27,7 @@ class PrivacyPolicyWordCountController(BaseController):
         Initialize the PrivacyPolicyWordCountController instance.
 
         Args:
-            file_name (str, optional): The name of the output JSON file.
-                                       If not provided, a default name is used.
+            file_name (str, optional): The name of the output JSON file. If not provided, a default name is used.
         """
         if not file_name:
             file_name = "privacy_policy_word_count.json"
@@ -36,10 +35,10 @@ class PrivacyPolicyWordCountController(BaseController):
 
     def __get_privacy_policy_word_count(self):
         """
-        Retrieves the word frequency count of the privacy policy.
+        Retrieves the word frequency count of the privacy policy and returns a dictionary of the count.
 
         Returns:
-            dict: Word frequency count of the privacy policy.
+            dict: Dictionary containing the word frequency count of the privacy policy.
         """
         privacy_policy_word_count = self.base_scrapper.privacy_policy_word_frequency_counter()
         return privacy_policy_word_count
@@ -58,9 +57,16 @@ class PrivacyPolicyWordCountController(BaseController):
 
     def main(self):
         """
-        Entry point of the controller.
+        Entry point of the controller that orchestrates the word counting and writing process.
 
         Returns:
-            str: Message indicating the success of the operation.
+            str: Message indicating the success of the operation or an error message if an exception occurs.
         """
-        return self.__write_privacy_policy_word_count()
+        try:
+            return self.__write_privacy_policy_word_count()
+        except Exception as e:
+            self.file_writer_obj.write_logs(
+                e.args[0],
+                self.log_file
+            )
+            return f"Error Writing {self.file_name} File"

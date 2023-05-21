@@ -1,29 +1,29 @@
 {
     "images": [],
     "scripts": [
-        "https://player.vimeo.com/api/player.js",
         "https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js",
+        "https://player.vimeo.com/api/player.js",
         "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/js/bootstrap.min.js"
     ],
     "stylesheets": [
-        "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css",
-        "https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"
+        "https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css",
+        "https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.3/css/bootstrap.min.css"
     ],
     "fonts": [
         "https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700"
     ],
     "links": [
-        "https://www.linkedin.com/company/cfc-underwriting-ltd",
         "https://schema.org",
-        "https://www.youtube.com/user/CFCUnderwriting",
-        "https://www.googletagmanager.com/gtm.js?id",
-        "https://www.instagram.com/cfc_underwriting",
         "https://www.facebook.com/cfcspecialistinsurance",
-        "https://www.google.com/recaptcha/api.js?render=6LemiyEaAAAAAGwb4nR8oX38fxyM36xjIGbwz6d4",
+        "http://www.w3.org/2000/svg",
+        "https://www.youtube.com/user/CFCUnderwriting",
+        "https://www.linkedin.com/company/cfc-underwriting-ltd",
+        "https://www.googletagmanager.com/gtm.js?id",
         "https://player.vimeo.com/progressive_redirect/playback/820914136/rendition/540p/file.mp4?loc=external&amp;signature=ed6b9cd3d3d450d3e575e10e17edf8585e70971fcc319420fa28d08fd5739bb5",
         "https://www.googletagmanager.com/ns.html?id=GTM-NGGN5FB",
-        "http://www.w3.org/2000/svg",
         "https://player.vimeo.com/video/821616121?h=aa7685e489&api=1autoplay=1&muted=1&controls=0",
-        "https://twitter.com/cfcunderwriting"
+        "https://www.google.com/recaptcha/api.js?render=6LemiyEaAAAAAGwb4nR8oX38fxyM36xjIGbwz6d4",
+        "https://twitter.com/cfcunderwriting",
+        "https://www.instagram.com/cfc_underwriting"
     ]
 }

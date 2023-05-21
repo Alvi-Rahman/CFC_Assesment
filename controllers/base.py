@@ -40,3 +40,4 @@ class BaseController:
         self.file_writer_obj = FileWriter()
         self.file_name = file_name
         self.base_scrapper = BeautifulSoupContentScrapper()
+        self.log_file = "error.log"
