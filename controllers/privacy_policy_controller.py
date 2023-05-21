@@ -31,7 +31,7 @@ class PrivacyPolicyWordCountController(BaseController):
                                        If not provided, a default name is used.
         """
         if not file_name:
-            file_name = "external_resources.json"
+            file_name = "privacy_policy_word_count.json"
         super(PrivacyPolicyWordCountController, self).__init__(file_name)
 
     def __get_privacy_policy_word_count(self):

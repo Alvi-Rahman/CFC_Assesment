@@ -31,7 +31,7 @@ class ResourceScrapeController(BaseController):
                                        If not provided, a default name is used.
         """
         if not file_name:
-            file_name = "privacy_policy_word_count.json"
+            file_name = "external_resources.json"
         super(ResourceScrapeController, self).__init__(file_name)
 
     def __scrape_resources(self):
