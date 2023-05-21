@@ -58,7 +58,7 @@ class BeautifulSoupContentScrapper:
         Args:
 
         Returns:
-            list: List of externally loaded resources.
+            dict: List of externally loaded resources.
         """
 
         # Get the url from which the content is to be fetched
