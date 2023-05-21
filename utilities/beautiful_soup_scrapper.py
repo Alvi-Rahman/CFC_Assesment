@@ -1,4 +1,3 @@
-from urllib.parse import urlparse
 from bs4 import BeautifulSoup
 from utilities.page_info import GetPageInfo
 from utilities.url_scrapper import FetchUrl
@@ -36,7 +35,7 @@ class BeautifulSoupContentScrapper:
     def get_parser(self):
         return self.__default_parser
 
-    def fetch_index_page(self, content):
+    def fetch_bs_page(self, content):
         """
         Fetches and returns a BeautifulSoup instance for the given HTML content.
 
@@ -69,16 +68,71 @@ class BeautifulSoupContentScrapper:
         content = get_page.get_content()
 
         # Fetch the index page by creating a BeautifulSoup instance
-        soup = self.fetch_index_page(content)
+        soup = self.fetch_bs_page(content)
 
         # Extract the base URL from the provided URL
-        base_url = urlparse(url).scheme + '://' + urlparse(url).netloc
 
         # Fetch external resources and urls
         bs_scrapper = FetchUrl()
 
-        # external_resources_tags = bs_scrapper.scrape_using_tags(soup, base_url)
+        # external_resources_tags = bs_scrapper.scrape_using_tags(soup, self.get_url())
 
         external_resources_re = bs_scrapper.scrape_using_regex(content)
         return external_resources_re
 
+    def count_words_frequency(self, url):
+        """
+        Scrapes the webpage at the given URL, performs case-insensitive word frequency count on the visible text,
+        and writes the frequency count to a JSON output file.
+
+        Args:
+            url (str): The URL of the webpage.
+        """
+        try:
+
+            # Get the content of the webpage using the GetPageInfo class
+            get_page = GetPageInfo(url)
+            content = get_page.get_content()
+
+            # Parse the content using BeautifulSoup
+            soup = self.fetch_bs_page(content)
+
+            # Find all visible text elements
+            visible_text = soup.get_text()
+            visible_text = visible_text.replace('\n', ' ')
+            visible_text = visible_text.split()
+
+            # Strip html tags
+            visible_text = [text.strip() for text in visible_text]
+
+            # Perform case-insensitive word frequency count
+            word_count = {}
+            for text in visible_text:
+                words = text.lower().split()
+                for word in words:
+                    word_count[word] = word_count.get(word, 0) + 1
+
+            return word_count
+        # except requests.exceptions.RequestException as e:
+        except Exception as e:
+            print(f"Error occurred while counting word frequency: {e}")
+
+    def privacy_policy_word_frequency_counter(self):
+        try:
+
+            # Get the content of the webpage using the GetPageInfo class
+            url = self.get_url()
+            get_page = GetPageInfo(url)
+            content = get_page.get_content()
+
+            # Parse the content using BeautifulSoup
+            soup = self.fetch_bs_page(content)
+
+            bs_scrapper = FetchUrl()
+            privacy_policy_url = bs_scrapper.find_privacy_policy_url(soup, url)
+
+            word_count = self.count_words_frequency(privacy_policy_url)
+            return word_count
+        # except requests.exceptions.RequestException as e:
+        except Exception as e:
+            print(f"Error occurred while counting word frequency: {e}")

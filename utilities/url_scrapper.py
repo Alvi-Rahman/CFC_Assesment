@@ -1,4 +1,5 @@
 import re
+from urllib.parse import urlparse
 
 
 class FetchUrl:
@@ -80,7 +81,6 @@ class FetchUrl:
             'fonts': [],
             'link': [],
         }
-
         resource_tags = soup.find_all(['img', 'script', 'link'])
 
         for tag in resource_tags:
@@ -98,8 +98,7 @@ class FetchUrl:
                 resource_url = tag.get('href')
 
             if resource_url and not resource_url.startswith('/') and not resource_url.startswith(base_url) \
-                    and not resource_url.startswith('http://cfc.com') and not resource_url.startswith(
-                'http://cfcunderwriting.com'):
+                    and not resource_url.startswith('https://cfc.com'):
                 external_resources[resource_type].append(resource_url)
 
         return external_resources
@@ -137,3 +136,29 @@ class FetchUrl:
                 external_resources['links'].append(url)
 
         return external_resources
+
+    @staticmethod
+    def find_privacy_policy_url(soup, url):
+        """
+        Finds the URL of the Privacy Policy page on the given webpage.
+
+        Args:
+            soup (BeautifulSoup): BS4 instance for the webpage to be scraped
+            url (str): url from which privacy policy is to be scraped
+
+        Returns:
+            str: The URL of the Privacy Policy page.
+        """
+        try:
+            # Find all <a> tags and search for the Privacy Policy link
+            links = soup.find_all('a', href=True)
+            for link in links:
+                href = link['href']
+                if 'privacy' in href.lower() and 'policy' in href.lower():
+                    privacy_policy_url = urlparse(url)._replace(path=href).geturl()
+                    return privacy_policy_url
+
+            print("Privacy Policy page not found.")
+        # except requests.exceptions.RequestException as e:
+        except Exception as e:
+            print(f"Error occurred while finding the Privacy Policy URL: {e}")
