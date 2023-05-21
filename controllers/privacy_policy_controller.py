@@ -1,82 +1,66 @@
 """
-Privacy Policy Word Count Controller
+PrivacyPolicyWordCountController
 
-This module contains the PrivacyPolicyWordCountController class that handles the scraping and word count functionality
-for the Privacy Policy page.
+A controller class for counting the word frequency in a privacy policy and writing the count to a JSON file.
 
-Classes:
-- PrivacyPolicyWordCountController
+Attributes:
+    file_name (str): The name of the output JSON file.
 
+Methods:
+    __get_privacy_policy_word_count():
+        Retrieves the word frequency count of the privacy policy.
+    __write_privacy_policy_word_count():
+        Writes the privacy policy word frequency count to a JSON file.
+    main():
+        Entry point of the controller.
+
+Inherits:
+    BaseController
 """
 
 from controllers.base import BaseController
 
 
 class PrivacyPolicyWordCountController(BaseController):
-    """
-    PrivacyPolicyWordCountController is responsible for scraping the index webpage, extracting externally loaded
-    resources, and performing a word count on the visible text of the Privacy Policy page.
-
-    Attributes:
-        file_name (str): The name of the output file for external resources.
-
-    Methods:
-        __init__(file_name=None):
-            Initializes the PrivacyPolicyWordCountController instance.
-        __scrape_resources():
-            Scrapes the index webpage and extracts externally loaded resources.
-        __write_resources():
-            Writes the external resources to a JSON file.
-        main():
-            Main entry point of the controller.
-
-    """
-
     def __init__(self, file_name=None):
         """
         Initialize the PrivacyPolicyWordCountController instance.
 
         Args:
-            file_name (str): The name of the output file for external resources. If not provided, "external_resources.json"
-                             will be used as the default file name.
-
+            file_name (str, optional): The name of the output JSON file.
+                                       If not provided, a default name is used.
         """
         if not file_name:
             file_name = "external_resources.json"
         super(PrivacyPolicyWordCountController, self).__init__(file_name)
 
-    def __scrape_resources(self):
+    def __get_privacy_policy_word_count(self):
         """
-        Scrape the index webpage and extract externally loaded resources.
+        Retrieves the word frequency count of the privacy policy.
 
         Returns:
-            dict: Dictionary of externally loaded resources categorized by resource type.
-
+            dict: Word frequency count of the privacy policy.
         """
-        external_resources = self.base_scrapper.scrape_index_page()
-        return external_resources
+        privacy_policy_word_count = self.base_scrapper.privacy_policy_word_frequency_counter()
+        return privacy_policy_word_count
 
-    def __write_resources(self):
+    def __write_privacy_policy_word_count(self):
         """
-        Write the externally loaded resources to a JSON file.
+        Writes the privacy policy word frequency count to a JSON file.
 
         Returns:
-            str: A message indicating the success of writing the resources to the file.
-
+            str: Message indicating the success of the write operation.
         """
-        external_resources = self.__scrape_resources()
+        privacy_policy_word_count = self.__get_privacy_policy_word_count()
         self.file_writer_obj.write_to_json_file(
-            external_resources,
-            self.file_name
-        )
-        return f"External resources were written to {self.file_name}"
+            privacy_policy_word_count, self.file_name)
+        return f"Privacy Policy Count was written to {self.file_name}"
 
     def main(self):
         """
-        Main entry point of the PrivacyPolicyWordCountController.
+        Entry point of the controller.
 
         Returns:
-            str: A message indicating the success of writing the external resources to the file.
-
+            str: Message indicating the success of the operation.
         """
-        return self.__write_resources()
+        return self.__write_privacy_policy_word_count()
