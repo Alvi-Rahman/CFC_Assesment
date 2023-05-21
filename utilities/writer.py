@@ -1,3 +1,13 @@
+"""
+FileWriter
+
+A class for writing data to a JSON file.
+
+Methods:
+    write_to_json_file(data, output_file):
+        Writes the data to a JSON file.
+"""
+
 import json
 
 

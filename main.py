@@ -1,23 +1,62 @@
-from utilities.beautiful_soup_scrapper import BeautifulSoupContentScrapper
-from utilities.writer import FileWriter
+"""
+CFC Web Scraper
+
+This module contains the CFCWebScrapper class that serves as the entry point for the web scraping process.
+
+Classes:
+- CFCWebScrapper
+
+"""
+
+from controllers.resource_controller import ResourceScrapeController
+from controllers.privacy_policy_controller import PrivacyPolicyWordCountController
 
 
 class CFCWebScrapper:
-    @staticmethod
-    def scrape_cfc_index_page():
-        bs_scrapper = BeautifulSoupContentScrapper()
-        external_resources = bs_scrapper.scrape_index_page()
-        file_writer = FileWriter()
-        file_name = "output.json"
-        file_writer.write_to_json_file(external_resources, file_name)
+    """
+    CFCWebScrapper serves as the entry point for the web scraping process.
 
-        word_count = bs_scrapper.privacy_policy_word_frequency_counter()
-        file_name = "privacy_policy.json"
-        file_writer.write_to_json_file(word_count, file_name)
-        return f"Privacy Policy File was written to {file_name}"
+    Methods:
+        resource_scraper_entry_point():
+            Executes the resource scraping process.
+        privacy_policy_word_counter_entry_point():
+            Executes the privacy policy word counting process.
+
+    """
+
+    @staticmethod
+    def resource_scraper_entry_point():
+        """
+        Executes the resource scraping process.
+
+        Returns:
+            str: A message indicating the success of the resource scraping process.
+
+        """
+        resource_scraper = ResourceScrapeController()
+        return resource_scraper.main()
+
+    @staticmethod
+    def privacy_policy_word_counter_entry_point():
+        """
+        Executes the privacy policy word counting process.
+
+        Returns:
+            str: A message indicating the success of the privacy policy word counting process.
+
+        """
+        privacy_policy_word_counter = PrivacyPolicyWordCountController()
+        return privacy_policy_word_counter.main()
 
 
 if __name__ == "__main__":
-    scraper_instance = CFCWebScrapper()
-    print(scraper_instance.scrape_cfc_index_page())
+    """
+    Entry point of the CFC Web Scraper.
 
+    Create an instance of CFCWebScrapper and execute the resource scraper and privacy policy word counter.
+    Print the results of both processes.
+
+    """
+    scraper_instance = CFCWebScrapper()
+    print(scraper_instance.resource_scraper_entry_point())
+    print(scraper_instance.privacy_policy_word_counter_entry_point())

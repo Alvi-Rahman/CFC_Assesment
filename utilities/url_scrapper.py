@@ -1,32 +1,38 @@
+"""
+FetchUrl
+
+A class for fetching URLs from content based on a specified pattern.
+
+Attributes:
+    __url_pattern (str): The regular expression pattern to match URLs.
+
+Methods:
+    get_url_pattern():
+        Returns the URL pattern used for matching.
+    fetch_url_list(content):
+        Fetches and returns a list of URLs from the provided content.
+    get_unique_url_list(url_list):
+        Returns a list of unique URLs from the given URL list.
+    scrape_using_tags(soup, base_url):
+        Extracts external resources from the BeautifulSoup instance using HTML tags.
+    scrape_using_regex(content):
+        Extracts external resources from the provided content using regular expressions.
+    find_privacy_policy_url(soup, url):
+        Finds the URL of the Privacy Policy page on the given webpage.
+"""
+
 import re
 from urllib.parse import urlparse
 
 
 class FetchUrl:
-    """
-    A class for fetching URLs from content based on a specified pattern.
-
-    Attributes:
-        __url_pattern (str): The regular expression pattern to match URLs.
-
-    Methods:
-        get_url_pattern():
-            Returns the URL pattern used for matching.
-
-        fetch_url_list(content):
-            Fetches and returns a list of URLs from the provided content.
-
-        get_unique_url_list(url_list):
-            Returns a list of unique URLs from the given URL list.
-    """
-
     def __init__(self, pattern=None):
         """
         Initialize the FetchUrl instance.
 
         Args:
             pattern (str, optional): The regular expression pattern to match URLs.
-                                    If not provided, a default pattern is used.
+                                     If not provided, a default pattern is used.
         """
         if pattern:
             self.__url_pattern = pattern
@@ -74,7 +80,16 @@ class FetchUrl:
 
     @staticmethod
     def scrape_using_tags(soup, base_url):
-        # List to store the external resources
+        """
+        Extracts external resources from the BeautifulSoup instance using HTML tags.
+
+        Args:
+            soup (BeautifulSoup): The BeautifulSoup instance representing the parsed HTML content.
+            base_url (str): The base URL of the webpage.
+
+        Returns:
+            dict: Dictionary containing the extracted external resources.
+        """
         external_resources = {
             'img': [],
             'script': [],
@@ -104,7 +119,15 @@ class FetchUrl:
         return external_resources
 
     def scrape_using_regex(self, content):
-        # List to store the external resources
+        """
+        Extracts external resources from the provided content using regular expressions.
+
+        Args:
+            content (str): The content from which to extract external resources.
+
+        Returns:
+            dict: Dictionary containing the extracted external resources.
+        """
         external_resources = {
             'images': [],
             'scripts': [],
@@ -143,8 +166,8 @@ class FetchUrl:
         Finds the URL of the Privacy Policy page on the given webpage.
 
         Args:
-            soup (BeautifulSoup): BS4 instance for the webpage to be scraped
-            url (str): url from which privacy policy is to be scraped
+            soup (BeautifulSoup): The BeautifulSoup instance representing the parsed HTML content.
+            url (str): The URL of the webpage.
 
         Returns:
             str: The URL of the Privacy Policy page.
@@ -159,6 +182,5 @@ class FetchUrl:
                     return privacy_policy_url
 
             print("Privacy Policy page not found.")
-        # except requests.exceptions.RequestException as e:
         except Exception as e:
             print(f"Error occurred while finding the Privacy Policy URL: {e}")
