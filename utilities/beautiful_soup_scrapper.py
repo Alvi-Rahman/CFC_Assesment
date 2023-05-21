@@ -80,7 +80,7 @@ class BeautifulSoupContentScrapper:
         url = self.get_url()
         get_page = GetPageInfo(url)
         content = get_page.get_content()
-        soup = self.fetch_bs_page(content)
+        # soup = self.fetch_bs_page(content)
 
         bs_scrapper = FetchUrl()
         external_resources = bs_scrapper.scrape_using_regex(content)
