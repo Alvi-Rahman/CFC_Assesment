@@ -69,41 +69,16 @@ class BeautifulSoupContentScrapper:
         content = get_page.get_content()
 
         # Fetch the index page by creating a BeautifulSoup instance
-        # soup = self.fetch_index_page(content)
+        soup = self.fetch_index_page(content)
 
         # Extract the base URL from the provided URL
-        # base_url = urlparse(url).scheme + '://' + urlparse(url).netloc
-
-        image_types = ['jpg', 'png', 'svg', 'jpeg']
-        script_types = ['js']
-        stylesheet_types = ['css']
-        fonts = ['https://fonts']
+        base_url = urlparse(url).scheme + '://' + urlparse(url).netloc
 
         # Fetch external resources and urls
         bs_scrapper = FetchUrl()
-        url_list = bs_scrapper.fetch_url_list(content)
 
-        # List to store the external resources
-        external_resources = {
-            'images': [],
-            'scripts': [],
-            'stylesheets': [],
-            'fonts': [],
-            'links': [],
-        }
+        # external_resources_tags = bs_scrapper.scrape_using_tags(soup, base_url)
 
-        # Loop for Mapping and generating Json File for External Resources
-        for url in url_list:
-            url_lookup = url.lower().split('.')
-            if url_lookup[-1] in image_types:
-                external_resources['images'].append(url)
-            elif url_lookup[-1] in script_types:
-                external_resources['scripts'].append(url)
-            elif url_lookup[-1] in stylesheet_types:
-                external_resources['stylesheets'].append(url)
-            elif url_lookup[0] in fonts:
-                external_resources['fonts'].append(url)
-            else:
-                external_resources['links'].append(url)
+        external_resources_re = bs_scrapper.scrape_using_regex(content)
+        return external_resources_re
 
-        return external_resources
