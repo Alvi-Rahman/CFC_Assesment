@@ -19,6 +19,7 @@ Methods:
         Scrapes the privacy policy page from the given URL, performs case-insensitive word frequency count on the
         visible text, and returns the frequency count as a dictionary.
 """
+from collections import Counter
 
 from bs4 import BeautifulSoup
 from utilities.page_info import GetPageInfo
@@ -111,11 +112,16 @@ class BeautifulSoupContentScrapper:
             visible_text = visible_text.split()
             visible_text = [text.strip() for text in visible_text]
 
-            word_count = {}
+            # word_count = dict()
+            # for text in visible_text:
+            #     words = text.lower().split()
+            #     for word in words:
+            #         word_count[word] = word_count.get(word, 0) + 1
+
+            word_count = Counter()
             for text in visible_text:
                 words = text.lower().split()
-                for word in words:
-                    word_count[word] = word_count.get(word, 0) + 1
+                word_count.update(words)
 
             return word_count
         except Exception as e:
