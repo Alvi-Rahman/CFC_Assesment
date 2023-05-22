@@ -57,8 +57,10 @@ class PrivacyPolicyWordCountController(BaseController):
             flag, privacy_policy_word_count = self.__get_privacy_policy_word_count()
             if not flag:
                 return f"Error Writing file to {self.file_name} due to {privacy_policy_word_count}"
-            self.file_writer_obj.write_to_json_file(
+            flag, errors = self.file_writer_obj.write_to_json_file(
                 privacy_policy_word_count, self.file_name)
+            if not flag:
+                return f"Error Writing file to {self.file_name} due to {errors}"
             return f"Privacy Policy Count was written to {self.file_name}"
         except Exception as e:
             return f"Error Writing file to {self.file_name} due to {e.args}"

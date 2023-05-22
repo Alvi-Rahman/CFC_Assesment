@@ -57,10 +57,12 @@ class ResourceScrapeController(BaseController):
             flag, external_resources = self.__scrape_resources()
             if not flag:
                 return f"Error Writing file to {self.file_name} due to {external_resources}"
-            self.file_writer_obj.write_to_json_file(
+            flag, errors = self.file_writer_obj.write_to_json_file(
                 external_resources,
                 self.file_name
             )
+            if not flag:
+                return f"Error Writing file to {self.file_name} due to {errors}"
             return f"External resources were written to {self.file_name}"
         except Exception as e:
             return f"Error Writing file to {self.file_name} due to {e.args}"
