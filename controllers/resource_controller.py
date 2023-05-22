@@ -77,8 +77,10 @@ class ResourceScrapeController(BaseController):
         try:
             return self.__write_resources()
         except Exception as e:
-            self.file_writer_obj.write_logs(
+            flag, error = self.file_writer_obj.write_logs(
                 e.args[0],
                 self.log_file
             )
+            if not flag:
+                return error
             return f"Error Writing {self.file_name} File"

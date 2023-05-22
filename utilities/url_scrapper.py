@@ -56,12 +56,15 @@ class FetchUrl:
             content (str): The content from which to fetch URLs.
 
         Returns:
-            list: List of URLs.
+            tuple: A tuple containing a flag indicating success (bool) and a List of URLs.
         """
 
         # Find all URLs matching the URL pattern in the content
-        url_list = re.findall(self.get_url_pattern(), content)
-        return self.get_unique_url_list(url_list)
+        try:
+            url_list = re.findall(self.get_url_pattern(), content)
+            return True, self.get_unique_url_list(url_list)
+        except Exception as e:
+            return False, e.args[0]
 
     @staticmethod
     def get_unique_url_list(url_list):
@@ -88,35 +91,38 @@ class FetchUrl:
             base_url (str): The base URL of the webpage.
 
         Returns:
-            dict: Dictionary containing the extracted external resources.
+            tuple: A tuple containing a flag indicating success (bool) and a dict containing the extracted external resources.
         """
-        external_resources = {
-            'img': [],
-            'script': [],
-            'fonts': [],
-            'link': [],
-        }
-        resource_tags = soup.find_all(['img', 'script', 'link'])
+        try:
+            external_resources = {
+                'img': [],
+                'script': [],
+                'fonts': [],
+                'link': [],
+            }
+            resource_tags = soup.find_all(['img', 'script', 'link'])
 
-        for tag in resource_tags:
-            resource_url = None
-            resource_type = tag.name
+            for tag in resource_tags:
+                resource_url = None
+                resource_type = tag.name
 
-            if resource_type == 'img':
-                resource_url = tag.get('src')
-            elif resource_type == 'script':
-                resource_url = tag.get('src')
-                external_resources.setdefault(resource_type, [])
-            elif resource_type == 'link' and tag.get('rel') == ['stylesheet'] or tag.get('rel') == 'stylesheet':
-                resource_url = tag.get('href')
-            elif resource_type == 'link' and tag.get('rel') == 'preload' and tag.get('as') == 'font':
-                resource_url = tag.get('href')
+                if resource_type == 'img':
+                    resource_url = tag.get('src')
+                elif resource_type == 'script':
+                    resource_url = tag.get('src')
+                    external_resources.setdefault(resource_type, [])
+                elif resource_type == 'link' and tag.get('rel') == ['stylesheet'] or tag.get('rel') == 'stylesheet':
+                    resource_url = tag.get('href')
+                elif resource_type == 'link' and tag.get('rel') == 'preload' and tag.get('as') == 'font':
+                    resource_url = tag.get('href')
 
-            if resource_url and not resource_url.startswith('/') and not resource_url.startswith(base_url) \
-                    and not resource_url.startswith('https://cfc.com'):
-                external_resources[resource_type].append(resource_url)
+                if resource_url and not resource_url.startswith('/') and not resource_url.startswith(base_url) \
+                        and not resource_url.startswith('https://cfc.com'):
+                    external_resources[resource_type].append(resource_url)
 
-        return external_resources
+            return True, external_resources
+        except Exception as e:
+            return False, e.args[0]
 
     def scrape_using_regex(self, content):
         """
@@ -126,39 +132,45 @@ class FetchUrl:
             content (str): The content from which to extract external resources.
 
         Returns:
-            dict: Dictionary containing the extracted external resources.
+            tuple: A tuple containing a flag indicating success (bool) and a Dictionary containing the extracted external resources.
         """
-        external_resources = {
-            'images': [],
-            'scripts': [],
-            'stylesheets': [],
-            'fonts': [],
-            'links': [],
-        }
+        try:
+            external_resources = {
+                'images': [],
+                'scripts': [],
+                'stylesheets': [],
+                'fonts': [],
+                'links': [],
+            }
 
-        image_types = ['jpg', 'png', 'svg', 'jpeg']
-        script_types = ['js']
-        stylesheet_types = ['css']
-        fonts = ['https://fonts']
+            image_types = ['jpg', 'png', 'svg', 'jpeg']
+            script_types = ['js']
+            stylesheet_types = ['css']
+            fonts = ['https://fonts']
 
-        # Fetch external resources and urls
-        url_list = self.fetch_url_list(content)
+            # Fetch external resources and urls
+            flag, url_list = self.fetch_url_list(content)
 
-        # Loop for Mapping and generating Json File for External Resources
-        for url in url_list:
-            url_lookup = url.lower().split('.')
-            if url_lookup[-1] in image_types:
-                external_resources['images'].append(url)
-            elif url_lookup[-1] in script_types:
-                external_resources['scripts'].append(url)
-            elif url_lookup[-1] in stylesheet_types:
-                external_resources['stylesheets'].append(url)
-            elif url_lookup[0] in fonts:
-                external_resources['fonts'].append(url)
-            else:
-                external_resources['links'].append(url)
+            if not flag:
+                return flag, url_list
 
-        return external_resources
+            # Loop for Mapping and generating Json File for External Resources
+            for url in url_list:
+                url_lookup = url.lower().split('.')
+                if url_lookup[-1] in image_types:
+                    external_resources['images'].append(url)
+                elif url_lookup[-1] in script_types:
+                    external_resources['scripts'].append(url)
+                elif url_lookup[-1] in stylesheet_types:
+                    external_resources['stylesheets'].append(url)
+                elif url_lookup[0] in fonts:
+                    external_resources['fonts'].append(url)
+                else:
+                    external_resources['links'].append(url)
+
+            return True, external_resources
+        except Exception as e:
+            return False, e.args[0]
 
     @staticmethod
     def find_privacy_policy_url(soup, url):
@@ -183,4 +195,4 @@ class FetchUrl:
 
             return False, None
         except Exception as e:
-            print(f"Error occurred while finding the Privacy Policy URL: {e}")
+            return False, e.args[0]

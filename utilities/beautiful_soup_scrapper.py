@@ -66,26 +66,32 @@ class BeautifulSoupContentScrapper:
             content (str): The HTML content of a webpage.
 
         Returns:
-            BeautifulSoup: A BeautifulSoup instance representing the parsed HTML content.
+            tuple: A tuple containing a flag indicating success (bool) and a BeautifulSoup instance representing the parsed HTML content.
         """
-        soup_instance = BeautifulSoup(content, self.get_parser())
-        return soup_instance
+        try:
+            soup_instance = BeautifulSoup(content, self.get_parser())
+            return True, soup_instance
+        except Exception as e:
+            return False, e.args[0]
 
     def scrape_index_page(self):
         """
         Scrapes the index page from the given URL and extracts externally loaded resources.
 
         Returns:
-            dict: Dictionary of externally loaded resources.
+            tuple: A tuple containing a flag indicating success (bool) and a dict of externally loaded resources.
         """
         try:
             url = self.get_url()
             get_page = GetPageInfo(url)
-            content = get_page.get_content()
-            # soup = self.fetch_bs_page(content)
-
+            flag, content = get_page.get_content()
+            if not flag:
+                return flag, content
             bs_scrapper = FetchUrl()
-            external_resources = bs_scrapper.scrape_using_regex(content)
+            flag, external_resources = bs_scrapper.scrape_using_regex(content)
+
+            if not flag:
+                return flag, external_resources
 
             return True, external_resources
         except Exception as e:
@@ -100,12 +106,19 @@ class BeautifulSoupContentScrapper:
             url (str): The URL of the webpage.
 
         Returns:
-            dict: Dictionary containing word frequency count.
+            tuple: A tuple containing a flag indicating success (bool) and a Dictionary containing word frequency count.
         """
         try:
             get_page = GetPageInfo(url)
-            content = get_page.get_content()
-            soup = self.fetch_bs_page(content)
+            flag, content = get_page.get_content()
+
+            if not flag:
+                return flag, content
+
+            flag, soup = self.fetch_bs_page(content)
+
+            if not flag:
+                return flag, soup
 
             visible_text = soup.get_text()
             visible_text = visible_text.replace('\n', ' ')
@@ -123,9 +136,9 @@ class BeautifulSoupContentScrapper:
                 words = text.lower().split()
                 word_count.update(words)
 
-            return word_count
+            return True, word_count
         except Exception as e:
-            print(f"Error occurred while counting word frequency: {e}")
+            return False, e.args[0]
 
     def privacy_policy_word_frequency_counter(self):
         """
@@ -142,15 +155,24 @@ class BeautifulSoupContentScrapper:
         try:
             url = self.get_url()
             get_page = GetPageInfo(url)
-            content = get_page.get_content()
-            soup = self.fetch_bs_page(content)
+            flag, content = get_page.get_content()
+
+            if not flag:
+                return flag, content
+            flag, soup = self.fetch_bs_page(content)
+
+            if not flag:
+                return flag, soup
 
             bs_scrapper = FetchUrl()
             flag, privacy_policy_url = bs_scrapper.find_privacy_policy_url(soup, url)
 
             if not flag:
                 return False, "Error Finding Privacy Policy Url"
-            word_count = self.count_words_frequency(privacy_policy_url)
+
+            flag, word_count = self.count_words_frequency(privacy_policy_url)
+            if not flag:
+                return flag, word_count
             return True, word_count
         except Exception as e:
             return False, e.args[0]

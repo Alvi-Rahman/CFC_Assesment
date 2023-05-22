@@ -42,17 +42,23 @@ class GetPageInfo:
         Send a GET request to the webpage URL and return the response.
 
         Returns:
-            requests.Response: The response object returned by the GET request.
+            tuple: A tuple containing a flag indicating success (bool) and a requests.Response: The response object returned by the GET request.
         """
-        response = requests.get(self.get_url())
-        return response
+        try:
+            response = requests.get(self.get_url())
+            return True, response
+        except Exception as e:
+            return False, e.args[0]
 
     def get_content(self):
         """
         Get the content of the webpage as text.
 
         Returns:
-            str: The content of the webpage.
+            tuple: A tuple containing a flag indicating success (bool) and a str: The content of the webpage.
         """
-        response = self.send_get_request()
-        return response.text
+        try:
+            flag, response = self.send_get_request()
+            return True, response.text
+        except Exception as e:
+            return False, e.args[0]
