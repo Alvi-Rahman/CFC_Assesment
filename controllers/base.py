@@ -18,23 +18,24 @@ class BaseController:
     file writing and content scraping.
 
     Attributes:
-        file_writer_obj (FileWriter): The instance of the FileWriter class for writing files.
+        file_writer_obj (FileWriter): An instance of the FileWriter class for writing files.
         file_name (str): The name of the output file.
-        base_scrapper (BeautifulSoupContentScrapper): The instance of the BeautifulSoupContentScrapper class for
+        base_scrapper (BeautifulSoupContentScrapper): An instance of the BeautifulSoupContentScrapper class for
                                                      scraping HTML content.
+        log_file (str): The name of the error log file.
 
     Methods:
         __init__(file_name=None):
-            Initializes the BaseController instance.
+            Initializes an instance of the BaseController.
 
     """
 
     def __init__(self, file_name=None):
         """
-        Initialize the BaseController instance.
+        Initializes an instance of the BaseController.
 
         Args:
-            file_name (str): The name of the output file. If not provided, the file_name will be None.
+            file_name (str, optional): The name of the output file. If not provided, the file_name will be None.
 
         """
         self.file_writer_obj = FileWriter()
