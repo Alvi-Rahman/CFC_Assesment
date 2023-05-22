@@ -38,7 +38,7 @@ class ResourceScrapeController(BaseController):
         Scrapes external resources from a webpage and returns a dictionary of the scraped resources.
 
         Returns:
-            dict: Dictionary containing the scraped external resources.
+            tuple: A tuple containing a flag indicating success (bool) and a dictionary (dict) containing the scraped external resources.
         """
         try:
             flag, external_resources = self.base_scrapper.scrape_index_page()
