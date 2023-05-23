@@ -18,6 +18,7 @@ The project has the following requirements, which can be installed using the pro
 - Python 3.9.x
 - BeautifulSoup4
 - Requests
+- PyTest
 
 To install the requirements, run the following command:
 
