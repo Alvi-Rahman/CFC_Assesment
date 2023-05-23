@@ -182,7 +182,7 @@ class FetchUrl:
             url (str): The URL of the webpage.
 
         Returns:
-            str: The URL of the Privacy Policy page.
+            tuple: A tuple containing a flag indicating success (bool) and the URL of the Privacy Policy page.
         """
         try:
             # Find all <a> tags and search for the Privacy Policy link
