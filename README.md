@@ -38,7 +38,13 @@ The program performs the following tasks:
 
 ## Running the Program
 
-To run the program, execute the `main.py` file. It calls the necessary functions from the controllers to perform the scraping and data processing tasks. Make sure you have the required dependencies installed before running the program.
+To run the program, execute the 
+
+```shell
+python3 main.py
+``` 
+
+It calls the necessary functions from the controllers to perform the scraping and data processing tasks. Make sure you have the required dependencies installed before running the program.
 
 
 After the program execution, you will find two output files generated:
